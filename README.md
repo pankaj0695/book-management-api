@@ -80,19 +80,22 @@ The server will be running at http://localhost:3000.
 - Headers: Authorization: Bearer <your-jwt-token>
 - Request Body:
 
-````json
-  {
+```json
+{
   "title": "Book Title",
   "author": "Author Name"
-  }
+}
+```
+
 - Response:
+
 ```json
-  {
+{
   "id": 1,
   "title": "Book Title",
   "author": "Author Name"
-  }
-````
+}
+```
 
 ### Retrieve Books
 

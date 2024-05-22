@@ -2,10 +2,11 @@
 
 ## Overview
 
-This project is a simple Book Management API built with Express.js. It provides endpoints to create, retrieve, update, and delete books. Additionally, it includes JWT-based authentication for secure access to the endpoints.
+This project is a simple Book Management API built with Express.js. It provides endpoints to create, retrieve, update, and delete books. Additionally, it includes user registration and JWT-based authentication for secure access to the endpoints.
 
 ## Features
 
+- User registration with password hashing (bcryptjs)
 - User authentication with JWT
 - CRUD operations for managing books
 - Middleware to verify JWT
@@ -50,6 +51,26 @@ The server will be running at http://localhost:3000.
 
 ## API Endpoints
 
+### User Registration
+
+- Endpoint: /register
+- Method: POST
+- Description: Registers a new user.
+- Request Body:
+
+```json
+{
+  "username": "newuser",
+  "password": "newpassword"
+}
+```
+
+- Response:
+
+```json
+"User registered successfully"
+```
+
 ### User Login
 
 - Endpoint: /login
@@ -59,8 +80,8 @@ The server will be running at http://localhost:3000.
 
 ```json
 {
-  "username": "pankajgupta",
-  "password": "pankaj@express"
+  "username": "newuser",
+  "password": "newpassword"
 }
 ```
 
@@ -176,30 +197,34 @@ The server will be running at http://localhost:3000.
 
 ## Testing with Postman
 
-1. Login:
+1. Register:
+
+- Send a POST request to http://localhost:3000/register with the body containing the username and password
+
+2. Login:
 
 - Send a POST request to http://localhost:3000/login with the body containing the username and password.
 - Copy the returned JWT token.
 
-2. Create a Book:
+3. Create a Book:
 
 - Send a POST request to http://localhost:3000/books with the JWT token in the Authorization header (e.g., Bearer <your-jwt-token>).
 - Include the book details in the body.
 
-3. Retrieve All Books:
+4. Retrieve All Books:
 
 - Send a GET request to http://localhost:3000/books with the JWT token in the Authorization header.
 
-4. Retrieve a Single Book:
+5. Retrieve a Single Book:
 
 - Send a GET request to http://localhost:3000/books/:id with the JWT token in the Authorization header.
 
-5. Update a Book:
+6. Update a Book:
 
 - Send a PUT request to http://localhost:3000/books/:id with the JWT token in the Authorization header.
 - Include the updated book details in the body.
 
-6. Delete a Book:
+7. Delete a Book:
 
 - Send a DELETE request to http://localhost:3000/books/:id with the JWT token in the Authorization header.
 

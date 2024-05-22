@@ -1,12 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
 
+const users = [];
 const books = [];
 let nextId = 1;
 const SECRET_KEY = "lkajfbooklkajd";
@@ -23,17 +25,43 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// User login route to get JWT
-app.post("/login", (req, res) => {
+// User registration route
+app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  // For simplicity, we'll just check for a hardcoded username and password
-  if (username === "pankajgupta" && password === "pankaj@express") {
-    const user = { name: username };
-    const token = jwt.sign(user, SECRET_KEY, { expiresIn: "1h" });
-    res.json({ token });
-  } else {
-    res.status(403).send("Invalid credentials");
+  if (!username || !password) {
+    return res.status(400).send("Username and password are required");
   }
+
+  // Check if user already exists
+  const existingUser = users.find((user) => user.username === username);
+  if (existingUser) {
+    return res.status(400).send("User already exists");
+  }
+
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = { username, password: hashedPassword };
+  users.push(newUser);
+
+  res.status(201).send("User registered successfully");
+});
+
+// User login route to get JWT
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find((user) => user.username === username);
+  if (!user) {
+    return res.status(403).send("Invalid username");
+  }
+
+  // Check password
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword) {
+    return res.status(403).send("Invalid password");
+  }
+
+  const token = jwt.sign({ name: username }, SECRET_KEY, { expiresIn: "1h" });
+  res.json({ token });
 });
 
 // Create book
